@@ -15,18 +15,18 @@ services:
     ports:
       - "80:3000"
     command: "npm start"
-    # links:
-    #   - database
-    # depends_on:
-    #   - database
-  # database:
-  #   image: mongo
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: root
-  #     MONGO_INITDB_DATABASE: learnify
-  #   ports:
-  #       - '27017:27017'
-  #   volumes:
-  #     - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    links:
+      - database
+    depends_on:
+      - database
+  database:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: learnify
+    ports:
+        - '27017:27017'
+    volumes:
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
