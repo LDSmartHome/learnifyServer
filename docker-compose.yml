@@ -13,7 +13,7 @@ services:
     expose:
       - "8081"
     ports:
-      - "80:3000"
+      - "443:3000"
     command: "npm start"
     links:
       - database

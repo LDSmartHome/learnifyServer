@@ -1,4 +1,6 @@
 const express = require('express')
+const https = require('https')
+const fs = require('fs')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const session = require('express-session')
@@ -19,10 +21,6 @@ const mongo = {
 
 mongoose.connect(mongo.uri, mongo.options)
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
-})
-
 mongoose.connection.on('error', function (err) {
   console.error('MongoDB connection error: ' + err)
 })
@@ -36,9 +34,9 @@ mongoose.connection.once('open', function () {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      //httpOnly: false,
+      httpOnly: false,
       sameSite: "none",
-      //secure: true,
+      secure: true,
     }
   }))
 
@@ -81,7 +79,7 @@ mongoose.connection.once('open', function () {
     res.send('Hello World!')
   })
 
-   // http://localhost/register?name=user&email=user@learnify.com&passwd=123
+   // https://localhost/register?name=user&email=user@learnify.com&passwd=123
   app.get('/register', function (req, res) {
     console.log("Register")
     var Users = new User({ email: req.query.email, username: req.query.name })
@@ -111,4 +109,13 @@ mongoose.connection.once('open', function () {
     console.log("islogin")
     res.json({ success: req.isAuthenticated() })
   })
+
+  const httpsOptions = {
+    key: fs.readFileSync('./src/security/server.key'),
+    cert: fs.readFileSync('./src/security/server.cert')
+  }
+  const server = https.createServer(httpsOptions, app)
+      .listen(port, () => {
+          console.log('server running at ' + port)
+    })
 })
