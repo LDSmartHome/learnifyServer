@@ -110,6 +110,12 @@ mongoose.connection.once('open', function () {
     res.json({ success: req.isAuthenticated() })
   })
 
+  app.get('/logout', function (req, res) {
+    console.log("Logout");
+    req.logout();
+    res.send('You are logged out');
+  });
+
   const httpsOptions = {
     key: fs.readFileSync('./src/security/server.key'),
     cert: fs.readFileSync('./src/security/server.cert')
